@@ -42,6 +42,10 @@ module.exports = {
   },
  
   plugins: [
+    new webpack.optimize.CommonsChunkPlugin({
+      name: ['comments', 'vendor', 'polyfills']
+    }),
+
     new HtmlWebpackPlugin({
       template: 'angular/comments/index.html',
       filename: 'comments.html',

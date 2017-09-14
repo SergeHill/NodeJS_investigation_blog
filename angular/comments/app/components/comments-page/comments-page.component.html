@@ -1,0 +1,8 @@
+<div class="comments-page">
+    <div class="comments-page-header" style="text-align: center;">
+        Comments Moderation
+    </div>
+    <div class="comments-page-body">
+        <comment *ngFor="let comment of comments | async" [comment]="comment"></comment>
+    </div>
+</div>
