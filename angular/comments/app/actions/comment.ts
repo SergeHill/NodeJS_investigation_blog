@@ -54,5 +54,16 @@ export class RejectCommentSuccessAction implements Action {
 }
 
 export class RejectCommentFailAction implements Action {
-    readonly type = REJECT_COMMENT_SUCCESS;
+    readonly type = REJECT_COMMENT_FAIL;
 }
+
+export type Actions
+    = LoadAction
+    | LoadSuccesAction
+    | LoadFailAction
+    | ApproveCommentAction
+    | ApproveCommentSuccessAction
+    | ApproveCommentFailAction
+    | RejectCommentAction
+    | RejectCommentSuccessAction
+    | RejectCommentFailAction;
