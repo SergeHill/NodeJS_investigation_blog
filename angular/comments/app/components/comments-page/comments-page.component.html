@@ -3,6 +3,11 @@
         Comments Moderation
     </div>
     <div class="comments-page-body">
-        <comment *ngFor="let comment of comments | async" [comment]="comment"></comment>
+        <comment *ngFor="let comment of comments | async" [comment]="comment"
+            (approve)="approveComment(comment)"
+            (reject)="rejectComment(comment)"></comment>            
     </div>
+
+    <div *ngIf="isLoading | async" class="loading-container">Loading...</div>
+    
 </div>

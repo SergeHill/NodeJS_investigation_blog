@@ -26,6 +26,8 @@ const initialState: State = {
 }
 
 export function reducer(state = initialState, action: comment.Actions) {
+    console.log(action.type);
+    
     switch (action.type) {
         case comment.LOAD:
         case comment.APPOVE_COMMENT:
