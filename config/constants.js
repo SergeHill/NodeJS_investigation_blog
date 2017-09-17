@@ -34,7 +34,8 @@ exports.columns = {
       COMMENT_CONTENT: 'commentContent',
       DATE: 'Date',
       COMMENT_OWNER_ID: 'commentOwnerID',
-      POST_DETAIL_ID: 'postDetailId'
+      POST_DETAIL_ID: 'postDetailId',
+      APPROVED: 'approved',
     },
     RATES: {
       RATE_ID: "rateID",
@@ -59,6 +60,7 @@ exports.POST_MODEL = {
   POST_COMMENT_CREATION_DATE: "postCommentCreationDate",
   POST_COMMENT_AUTHOR_ID: "postCommentAuthorId",
   POST_COMMENT_AUTHOR: "postCommentAuthor",
+  POST_COMMENT_APPROVED: 'approved',
   POST_RATING_OWNER_ID: "postRatingOwnerId",
   POST_RATING_OWNER_NAME: "postRatingOwnerName",
   POST_RATE: "postRate",

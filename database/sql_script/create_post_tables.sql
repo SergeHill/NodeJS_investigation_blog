@@ -96,6 +96,7 @@ CREATE TABLE [dbo].[Comments](
 	[Date] [date] NULL,
 	[commentOwnerID] [int] NULL,
 	[postDetailID] [int] NULL,
+	[approved] [bit] NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[commentID] ASC

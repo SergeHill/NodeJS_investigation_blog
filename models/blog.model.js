@@ -79,6 +79,7 @@ blog.POSTS.getAllPostsInfo = () => {
            C.[${DB.columns.BLOG.COMMENTS.COMMENT_CONTENT}] as postCommentContent,
            C.[${DB.columns.BLOG.COMMENTS.DATE}] as postCommentCreationDate,
            C.[${DB.columns.BLOG.COMMENTS.COMMENT_OWNER_ID}] as postCommentAuthorId,
+           C.[${DB.columns.BLOG.COMMENTS.APPROVED}] as approved,
            U2.[${DB.columns.BLOG.USERS.NAME}] as postCommentAuthor,
            AVG(R1.[${DB.columns.BLOG.RATES.RATE}]) as postRate, 
            (SELECT ${DB.tables.BLOG.RATES}.[${DB.columns.BLOG.RATES.RATE}] FROM ${DB.tables.BLOG.RATES} WHERE ${DB.tables.BLOG.RATES}.[${DB.columns.BLOG.RATES.POST_ID}] = P.[${DB.columns.BLOG.POSTS.POST_ID}] and ${DB.tables.BLOG.RATES}.[${DB.columns.BLOG.RATES.USER_ID}] = ${global.User.id}) as currentUsersRate    
@@ -97,6 +98,7 @@ blog.POSTS.getAllPostsInfo = () => {
                                    C.[${DB.columns.BLOG.COMMENTS.COMMENT_CONTENT}], 
                                    C.[${DB.columns.BLOG.COMMENTS.DATE}], 
                                    C.[${DB.columns.BLOG.COMMENTS.COMMENT_OWNER_ID}], 
+                                   C.[${DB.columns.BLOG.COMMENTS.APPROVED}],
                                    U2.[${DB.columns.BLOG.USERS.NAME}]`);
 
 }
@@ -116,6 +118,28 @@ blog.COMMENTS.addComment = (comment, ownerId, detailId) => {
        ${DB.columns.BLOG.COMMENTS.COMMENT_OWNER_ID},
        ${DB.columns.BLOG.COMMENTS.POST_DETAIL_ID})
       VALUES ('${comment}', GETDATE(),${ownerId},${detailId})`);
+}
+
+blog.COMMENTS.updateComment = (id, approved) => {
+  return dataBase(`
+    UPDATE ${DB.tables.BLOG.COMMENTS}
+    SET ${DB.columns.BLOG.COMMENTS.APPROVED} = ${approved}
+    WHERE ${DB.columns.BLOG.COMMENTS.COMMENT_ID} = ${id}
+  `);
+}
+
+blog.COMMENTS.getNewComments = () => {
+  return dataBase(`
+    SELECT ${DB.columns.BLOG.COMMENTS.COMMENT_ID},
+    ${DB.columns.BLOG.COMMENTS.COMMENT_CONTENT},
+    ${DB.columns.BLOG.COMMENTS.DATE},
+    ${DB.columns.BLOG.COMMENTS.COMMENT_OWNER_ID},
+    ${DB.columns.BLOG.USERS.NAME}
+    FROM ${DB.tables.BLOG.COMMENTS} 
+      INNER JOIN ${DB.tables.BLOG.USERS} 
+        ON ${DB.columns.BLOG.COMMENTS.COMMENT_OWNER_ID} = ${DB.columns.BLOG.USERS.USER_ID}
+    WHERE ${DB.columns.BLOG.COMMENTS.APPROVED} IS NULL
+  `);
 }
 
 blog.RATES.setRate = (rate, postId, userId) => {

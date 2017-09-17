@@ -2,16 +2,16 @@ var config = {
     production: {},
     default: {
         database: {
-            login: 'admin',
-            password: '123456',
+            login: 'sa',
+            password: 'password',
             options: {
-                host: 'RUKAVITSINI',
-                port: 1555,
+                host: 'AKOSITV',
+                port: 1433,
                 dialect: 'mssql'
             }
         },
         cache: {
-            shouldBeUsed: true
+            shouldBeUsed: false
         }
     }
 }

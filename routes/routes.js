@@ -92,5 +92,12 @@ module.exports = function (passport) {
         res.sendFile('comments.html', { root: 'dist'});
     })
 
+    router.get('/newComments', (req, res) => {
+        data.getNewComments().then(data => {
+            res.setHeader('Content-Type', 'application/json');
+            res.send(JSON.stringify(data));
+        })
+    })
+
     return router;
 }

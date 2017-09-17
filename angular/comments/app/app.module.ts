@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { StoreModule } from "@ngrx/store";
 import { EffectsModule } from '@ngrx/effects'
+import { StoreDevtoolsModule } from '@ngrx/store-devtools'
 
 import { AppComponent } from './app.component';
 import { CommentsPageComponent } from './components/comments-page/comments-page.component';
@@ -17,7 +18,8 @@ import { effects } from './effects';
         BrowserModule, 
         FormsModule,
         StoreModule.forRoot(reducers),
-        EffectsModule.forRoot(effects)
+        EffectsModule.forRoot(effects),
+        StoreDevtoolsModule.instrument(),
     ],
     declarations: [
         AppComponent,

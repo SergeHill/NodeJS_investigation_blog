@@ -1,6 +1,6 @@
 const blog = require('./models/blog.model.js'),
     posts = require('./models/post.model.js'),
-    cache = require('./config/cache.js'), {POST_MODEL, CACHE} = require('./config/constants'),
+    cache = require('./config/cache.js'), {POST_MODEL, CACHE, columns} = require('./config/constants'),
     config = require('./config/config.js').get(process.env.NODE_ENV),
     data = {};
 
@@ -113,6 +113,26 @@ data.addCommentToThePost = (content, ownerId, detailId) => {
                 } else {
                     resolve();
                 }
+            });
+    });
+}
+
+data.updateComment = (id, approved) => {
+    blog.COMMENTS.updateComment(id, approved);
+    return Promise.resolve();
+}
+
+data.getNewComments = () => {
+    return new Promise((resolve, reject) => {
+        blog.COMMENTS.getNewComments()
+            .spread((result, metadata) => {
+                let commets = result.map(comment => ({
+                    id: comment[columns.BLOG.COMMENTS.COMMENT_ID],
+                    commentContent: comment[columns.BLOG.COMMENTS.COMMENT_CONTENT],
+                    Date: comment[columns.BLOG.COMMENTS.DATE],
+                    Name: comment[columns.BLOG.USERS.NAME]
+                }));
+                resolve(commets);
             });
     });
 }
