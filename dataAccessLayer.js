@@ -102,6 +102,7 @@ data.addCommentToThePost = (content, ownerId, detailId) => {
             .COMMENTS
             .addComment(content, ownerId, detailId)
             .spread((result, metadata) => {
+                let newComment = result[0];
                 // CACHE update on comment adding
                 if (config.cache.shouldBeUsed) {
                     blog
@@ -111,7 +112,12 @@ data.addCommentToThePost = (content, ownerId, detailId) => {
                             cacheUpdate(result, resolve);
                         });
                 } else {
-                    resolve();
+                    resolve({
+                        id: newComment[columns.BLOG.COMMENTS.COMMENT_ID],
+                        commentContent: newComment[columns.BLOG.COMMENTS.COMMENT_CONTENT],
+                        Date: newComment[columns.BLOG.COMMENTS.DATE],
+                        Name: newComment[columns.BLOG.USERS.NAME]
+                    });
                 }
             });
     });

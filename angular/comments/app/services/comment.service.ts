@@ -1,43 +1,34 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
-import { Comment } from './../models/comment.model';
-
-const defaultComments: Comment[] = [
-    {
-        id: 2,
-        commentContent: 'comment 1',
-        Date: new Date(),
-        Name: 'admin'
-    },
-    {
-        id: 1,
-        commentContent: 'comment 1',
-        Date: new Date(),
-        Name: 'admin'
-    },
-    {
-        id: 1,
-        commentContent: 'comment 1',
-        Date: new Date(),
-        Name: 'admin'
-    },
-    {
-        id: 1,
-        commentContent: 'comment 1',
-        Date: new Date(),
-        Name: 'admin'
-    },
-]
+import { Observable } from 'rxjs';
+import { Comment } from '../models/comment.model';
+import * as actions from '../actions/comment';
+import { SocketService } from './socket.service';
 
 @Injectable()
 export class CommentService {
-    comments: Observable<any>;
+
+    commentsLoaded: Observable<any>;
+    commetApproved: Observable<any>;
+    commentRejected: Observable<any>;
+    commentAdded: Observable<any>;
     
-    constructor() {
-        let bufferSize = 10;
-        this.comments = Observable.of(defaultComments)
-            .publish()
-            .refCount();
+    constructor(private socket: SocketService) {
+        this.socket.connect();
+        this.commentsLoaded = this.socket.listen('comments-loaded');
+        this.commetApproved = this.socket.listen('comment-approved');
+        this.commentRejected = this.socket.listen('comment-rejected');
+        this.commentAdded = this.socket.listen('comment-added');
     }
 
+    loadNewComments() {
+        this.socket.emit('comments-load');
+    }
+
+    approveComment(comment: Comment) {
+        this.socket.emit('comment-approve', comment);
+    }
+
+    rejectComment(comment: Comment) {
+        this.socket.emit('comment-reject', comment);
+    }
 }

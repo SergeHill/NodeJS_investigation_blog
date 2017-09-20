@@ -10,6 +10,7 @@ export const APPOVE_COMMENT_FAIL = 'APPOVE_COMMENT_FAIL_ACTION';
 export const REJECT_COMMENT = 'REJECT_COMMENT_ACTION';
 export const REJECT_COMMENT_SUCCESS = 'REJECT_COMMENT_SUCCESS_ACTION';
 export const REJECT_COMMENT_FAIL = 'REJECT_COMMENT_FAIL_ACTION';
+export const NEW_COMMENT = 'NEW_COMMENT_ACTION';
 
 export class LoadAction implements Action {
     readonly type = LOAD;
@@ -57,6 +58,12 @@ export class RejectCommentFailAction implements Action {
     readonly type = REJECT_COMMENT_FAIL;
 }
 
+export class NewCommentAction implements Action {
+    readonly type = NEW_COMMENT;
+
+    constructor(public payload: Comment) { }
+}
+
 export type Actions
     = LoadAction
     | LoadSuccesAction
@@ -66,4 +73,5 @@ export type Actions
     | ApproveCommentFailAction
     | RejectCommentAction
     | RejectCommentSuccessAction
-    | RejectCommentFailAction;
+    | RejectCommentFailAction
+    | NewCommentAction;

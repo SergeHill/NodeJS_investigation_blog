@@ -8,25 +8,12 @@ export interface State {
 }
 
 const initialState: State = {
-    comments: [
-        {
-            id: 1,
-            commentContent: 'comment 1',
-            Date: new Date(),
-            Name: 'admin'
-        },
-        {
-            id: 2,
-            commentContent: 'comment 2',
-            Date: new Date(),
-            Name: 'admin'
-        },
-    ],
+    comments: [],
     loading: false,
 }
 
 export function reducer(state = initialState, action: comment.Actions) {
-    console.log(action.type);
+    console.log(action);
     
     switch (action.type) {
         case comment.LOAD:
@@ -46,6 +33,12 @@ export function reducer(state = initialState, action: comment.Actions) {
         case comment.APPOVE_COMMENT_FAIL:
         case comment.REJECT_COMMENT_FAIL:
             return { ...state, loading: false };
+        
+        case comment.LOAD_SUCCESS: 
+            return { ...state, comments: action.payload, loading: false }
+
+        case comment.NEW_COMMENT: 
+            return { ...state, comments: state.comments.concat(action.payload)}
 
         default:
             return state;

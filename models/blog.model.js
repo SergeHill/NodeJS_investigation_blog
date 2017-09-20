@@ -117,7 +117,8 @@ blog.COMMENTS.addComment = (comment, ownerId, detailId) => {
        ${DB.columns.BLOG.COMMENTS.DATE},
        ${DB.columns.BLOG.COMMENTS.COMMENT_OWNER_ID},
        ${DB.columns.BLOG.COMMENTS.POST_DETAIL_ID})
-      VALUES ('${comment}', GETDATE(),${ownerId},${detailId})`);
+      VALUES ('${comment}', GETDATE(),${ownerId},${detailId});
+      SELECT TOP 1 * FROM ${DB.tables.BLOG.COMMENTS} WHERE ${DB.columns.BLOG.COMMENTS.COMMENT_ID} = SCOPE_IDENTITY()`);
 }
 
 blog.COMMENTS.updateComment = (id, approved) => {

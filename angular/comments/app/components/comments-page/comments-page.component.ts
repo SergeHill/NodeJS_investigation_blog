@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 
@@ -13,14 +13,18 @@ import * as commentActions from '../../actions/comment';
     selector: 'comments-page',
     templateUrl: './comments-page.component.html'
 })
-export class CommentsPageComponent{
+export class CommentsPageComponent implements OnInit{
 
     comments: Observable<any>;
     isLoading: Observable<boolean>;
 
-    constructor(private store: Store<State>) {
+    constructor(private store: Store<State>, private commentService: CommentService) {
         this.comments = store.select(state => state.comments.comments);
         this.isLoading = store.select(state => state.comments.loading);
+    }
+
+    ngOnInit(): void {
+        this.store.dispatch(new commentActions.LoadAction());        
     }
 
     approveComment(comment: Comment) {

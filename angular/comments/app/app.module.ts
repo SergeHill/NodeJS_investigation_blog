@@ -9,13 +9,14 @@ import { AppComponent } from './app.component';
 import { CommentsPageComponent } from './components/comments-page/comments-page.component';
 import { CommentComponent } from './components/comment/comment.component';
 
+import { SocketService } from './services/socket.service';
 import { CommentService } from './services/comment.service';
 import { reducers } from './reducers';
 import { effects } from './effects';
 
 @NgModule({
     imports: [
-        BrowserModule, 
+        BrowserModule,
         FormsModule,
         StoreModule.forRoot(reducers),
         EffectsModule.forRoot(effects),
@@ -27,7 +28,7 @@ import { effects } from './effects';
         CommentComponent,
     ],
 
-    providers: [CommentService],
+    providers: [SocketService, CommentService],
 
     bootstrap: [AppComponent]
 })
