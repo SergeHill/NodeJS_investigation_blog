@@ -1,36 +1,53 @@
 var dal = require('./dataAccessLayer');
-var socket = null;
-function init(io) {
-    socket = io;
-    socket.on('comment-approve', comment => {
+var socketio = require('socket.io');
+var io = null;
+
+function init(client) {
+
+    client.on('join', room => {
+        console.log('client joined ' + room);
+        client.join(room);
+    });
+
+    client.on('comment-approve', comment => {
         comment.approved = 1;
-        console.log(comment);
+        console.log('comment-approve');
         dal.updateComment(comment.id, comment.approved)
             .then(() => {
-                socket.sockets.emit('comment-approved', comment);
+                console.log('comment-approved');
+                io.in('comments').emit('comment-approved', comment);
             })
             .catch(err => console.log(err));
     });
 
-    socket.on('comment-reject', comment => {
+    client.on('comment-reject', comment => {
         comment.approved = 0;
         dal.updateComment(comment.id, comment.approved)
             .then(() => {
-                socket.sockets.emit('comment-rejected', comment);
+                io.in('comments').emit('comment-rejected', comment);
             });
     });
 
-    socket.on('comments-load',() => {
+    client.on('comments-load',() => {
         dal.getNewComments().then(data => {
-            socket.emit('comments-loaded', data);
+            client.emit('comments-loaded', data);
         });
 
     });
 }
 
 function addComment(comment) {
-    socket.emit('comment-added', comment);
+    io.in('comments').emit('comment-added', comment);
+}
+
+function listen(port) {
+    io = socketio.listen(port);
+
+    io.on('connection', client => {
+        init(client);
+    });
 }
 
 exports.init = init;
 exports.addComment = addComment;
+exports.listen = listen;

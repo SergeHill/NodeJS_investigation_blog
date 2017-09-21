@@ -21,6 +21,10 @@ export class SocketService {
         this.socket.disconnect();
     }
 
+    join(room: string) {
+        this.socket.emit('join', room);
+    }
+
     emit(event: string, data?: any) {
         this.socket.emit(event, data);
     }

@@ -14,6 +14,7 @@ export class CommentService {
     
     constructor(private socket: SocketService) {
         this.socket.connect();
+        this.socket.join('comments');
         this.commentsLoaded = this.socket.listen('comments-loaded');
         this.commetApproved = this.socket.listen('comment-approved');
         this.commentRejected = this.socket.listen('comment-rejected');
