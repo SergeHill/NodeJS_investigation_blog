@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha -w --ui tdd",
-    "start": "set NODE_ENV=development&&nodemon index",
-    "prod": "set NODE_ENV=production&&nodemon index"
+    "start": "set NODE_ENV=development&&npm-run-all --parallel watch:client watch:server",
+    "prod": "set NODE_ENV=production&&nodemon index",
+    "watch:client": "webpack --watch",
+    "watch:server": "nodemon index"
   },
   "keywords": [],
   "author": "",
@@ -63,6 +65,7 @@
     "html-webpack-plugin": "^2.16.1",
     "mocha": "^3.3.0",
     "morgan": "^1.8.1",
+    "npm-run-all": "^4.1.1",
     "raw-loader": "^0.5.1",
     "style-loader": "^0.13.1",
     "typescript": "^2.2.0",
