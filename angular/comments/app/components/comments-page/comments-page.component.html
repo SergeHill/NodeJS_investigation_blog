@@ -1,13 +1,12 @@
 <div class="comments-page">
-    <div class="comments-page-header" style="text-align: center;">
+    <div class="comments-page-header text-center">
         Comments Moderation
     </div>
-    <div class="comments-page-body">
-        <comment *ngFor="let comment of comments | async" [comment]="comment"
-            (approve)="approveComment(comment)"
-            (reject)="rejectComment(comment)"></comment>            
-    </div>
+    <comment *ngFor="let comment of comments | async" [comment]="comment" 
+        (approve)="approveComment(comment)" 
+        (reject)="rejectComment(comment)">
+    </comment>
 
-    <div *ngIf="isLoading | async" class="loading-container">Loading...</div>
-    
+    <div *ngIf="isLoading | async" class="text-center">Loading...</div>
+
 </div>

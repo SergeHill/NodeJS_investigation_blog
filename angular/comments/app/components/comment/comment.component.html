@@ -1,21 +1,11 @@
 <div class="panel panel-default comment-panel container">
-    <div class="row">
-        <div class="col-md-8 col-sm-8">
-            <p>{{comment.Name}}'s comment:</p>
-            <div class="row">
-                <div class="col-md-8 col-sm-8">
-                    {{comment.commentContent}}
-                </div>
-                <div class="col-md-4 col-sm-4">
-                    {{comment.Date | date: 'dd/MM/yyyy'}}
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 col-sm-4">
-            <div class="btn-group comment-btn-group">
-                <button class="btn btn-default" (click)="onApproveClicked()">Approve</button>
-                <button class="btn btn-default" (click)="onRejectClicked()">Reject</button>
-            </div>
-        </div>
+    <div class="float-right">
+        {{comment.Date | date: 'dd/MM/yyyy'}}
+    </div>
+    <p>{{comment.Name}}'s comment:</p>
+    <p>{{comment.commentContent}}</p>
+    <div class="btn-group float-right">
+        <button class="btn btn-default" (click)="onApproveClicked()">Approve</button>
+        <button class="btn btn-default" (click)="onRejectClicked()">Reject</button>
     </div>
 </div>
