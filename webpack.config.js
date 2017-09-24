@@ -4,6 +4,8 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var path = require('path');
 
 module.exports = {
+  target: 'web',
+  devtool: 'source-map',
   entry: {
     'polyfills': './angular/polyfills.ts',
     'vendor': './angular/vendor.ts',
@@ -59,7 +61,8 @@ module.exports = {
     new webpack.optimize.UglifyJsPlugin({
       mangle: {
         keep_fnames: true
-      }
+      },
+      sourceMap: true,
     }),
 
     new webpack.LoaderOptionsPlugin({
