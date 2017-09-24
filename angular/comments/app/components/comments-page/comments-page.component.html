@@ -2,7 +2,7 @@
     <div class="comments-page-header text-center">
         Comments Moderation
     </div>
-    <div [@commentsAnimation]="(comments | async)?.length">
+    <div [@loadAnimation]="(comments | async)?.length">
         <comment *ngFor="let comment of comments | async" [comment]="comment"
             (approve)="approveComment(comment)"
             (reject)="rejectComment(comment)">

@@ -9,6 +9,8 @@ import { CommentService } from '../services';
 export class CommentEffects {
     constructor(private actions: Actions, private commentService: CommentService) { }
 
+    interval = 500;
+
     @Effect({ dispatch: false })
     loadComments$ = this.actions
         .ofType<commentActions.LoadAction>(commentActions.LOAD)
@@ -24,13 +26,17 @@ export class CommentEffects {
 
     @Effect({ dispatch: false })
     approveComment$ = this.actions
-        .ofType<commentActions.ApproveCommentAction>(commentActions.APPOVE_COMMENT)
+        .ofType<commentActions.ApproveCommentAction>(commentActions.APPROVE_COMMENT)
         .map(action => action.payload)
         .do(comment => this.commentService.approveComment(comment));
 
     @Effect()
     commentApproved$ = this.commentService.commetApproved
-        .switchMap(comment => Observable.of(new commentActions.ApproveCommentSuccessAction(comment)));
+    .mergeMap(comment => 
+        Observable.of(new commentActions.ApproveCommentAboutToSuccessAction(comment))
+            .concat(Observable.empty().delay(this.interval))
+            .concat(Observable.of(new commentActions.ApproveCommentSuccessAction(comment)))
+);
 
     @Effect({ dispatch: false })
     rejectComment$ = this.actions
@@ -40,5 +46,9 @@ export class CommentEffects {
 
     @Effect()
     commentRejected$ = this.commentService.commentRejected
-        .switchMap(comment => Observable.of(new commentActions.RejectCommentSuccessAction(comment)));
+        .mergeMap(comment => 
+                Observable.of(new commentActions.RejectCommentAboutToSuccessAction(comment))
+                    .concat(Observable.empty().delay(this.interval))
+                    .concat(Observable.of(new commentActions.RejectCommentSuccessAction(comment)))
+        );
 }
