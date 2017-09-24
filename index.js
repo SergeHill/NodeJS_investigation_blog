@@ -1,6 +1,7 @@
 const app = require('./app'),
     https = require('https'),
-    fs = require('fs');
+    fs = require('fs'),
+    socketService = require('./socketService');
 
 app.listen(app.get('port'), () => {
     console.log('Node app is running on port', app.get('port'));
@@ -14,3 +15,5 @@ const httpsOptions = {
 const httpsServer = https
     .createServer(httpsOptions, app)
     .listen(3443);
+
+socketService.listen(3001);

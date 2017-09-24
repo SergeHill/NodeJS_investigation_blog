@@ -5,6 +5,4 @@ import './app.component.css';
     selector: 'app',
     templateUrl: './app.component.html'
 })
-export class AppComponent {
-    name = 'Andrey';
-}
+export class AppComponent { }

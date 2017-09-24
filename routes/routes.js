@@ -1,6 +1,7 @@
 const express = require('express'),
     router = express.Router(),
-    data = require('../dataAccessLayer');
+    data = require('../dataAccessLayer'),
+    sockerService = require('../socketService');
     
 module.exports = function (passport) {
     // serverErrorHandler
@@ -44,7 +45,8 @@ module.exports = function (passport) {
     router.post('/profile/post/:id/newComment', (req, res) => {
         data
             .addCommentToThePost(req.body.comment, req.query.ownerId, req.query.detailId)
-            .then(() => {
+            .then((result) => {
+                sockerService.addComment(result);
                 res.redirect('../' + req.params.id + '?userId=' + global.User.id);
             })
     });
@@ -90,6 +92,13 @@ module.exports = function (passport) {
 
     router.get('/comments', (req, res) => {
         res.sendFile('comments.html', { root: 'dist'});
+    })
+
+    router.get('/newComments', (req, res) => {
+        data.getNewComments().then(data => {
+            res.setHeader('Content-Type', 'application/json');
+            res.send(JSON.stringify(data));
+        })
     })
 
     return router;

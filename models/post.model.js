@@ -59,7 +59,7 @@ posts.getPostInfoById = (postId, posts) => {
 
 posts.getPostCommentsByPostId = (postId, posts) => {
     let currentPostInfo = posts.filter((item) => {
-        return (item[POST_MODEL.POST_ID] === + postId && !!item[POST_MODEL.POST_COMMENT_AUTHOR_ID]);
+        return (item[POST_MODEL.POST_ID] === + postId && !!item[POST_MODEL.POST_COMMENT_AUTHOR_ID] && item[POST_MODEL.POST_COMMENT_APPROVED]);
     });
 
     return currentPostInfo.map((item) => {

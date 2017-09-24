@@ -1,6 +1,6 @@
 const blog = require('./models/blog.model.js'),
     posts = require('./models/post.model.js'),
-    cache = require('./config/cache.js'), {POST_MODEL, CACHE} = require('./config/constants'),
+    cache = require('./config/cache.js'), {POST_MODEL, CACHE, columns} = require('./config/constants'),
     config = require('./config/config.js').get(process.env.NODE_ENV),
     data = {};
 
@@ -102,6 +102,7 @@ data.addCommentToThePost = (content, ownerId, detailId) => {
             .COMMENTS
             .addComment(content, ownerId, detailId)
             .spread((result, metadata) => {
+                let newComment = result[0];
                 // CACHE update on comment adding
                 if (config.cache.shouldBeUsed) {
                     blog
@@ -111,8 +112,33 @@ data.addCommentToThePost = (content, ownerId, detailId) => {
                             cacheUpdate(result, resolve);
                         });
                 } else {
-                    resolve();
+                    resolve({
+                        id: newComment[columns.BLOG.COMMENTS.COMMENT_ID],
+                        commentContent: newComment[columns.BLOG.COMMENTS.COMMENT_CONTENT],
+                        Date: newComment[columns.BLOG.COMMENTS.DATE],
+                        Name: newComment[columns.BLOG.USERS.NAME]
+                    });
                 }
+            });
+    });
+}
+
+data.updateComment = (id, approved) => {
+    blog.COMMENTS.updateComment(id, approved);
+    return Promise.resolve();
+}
+
+data.getNewComments = () => {
+    return new Promise((resolve, reject) => {
+        blog.COMMENTS.getNewComments()
+            .spread((result, metadata) => {
+                let commets = result.map(comment => ({
+                    id: comment[columns.BLOG.COMMENTS.COMMENT_ID],
+                    commentContent: comment[columns.BLOG.COMMENTS.COMMENT_CONTENT],
+                    Date: comment[columns.BLOG.COMMENTS.DATE],
+                    Name: comment[columns.BLOG.USERS.NAME]
+                }));
+                resolve(commets);
             });
     });
 }
