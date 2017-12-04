@@ -1,8 +1,9 @@
 const LocalStrategy = require('passport-local').Strategy,
     FacebookStrategy = require('passport-facebook').Strategy,
-    Model = require('../models/blog.model'),
     configAuth = require('./auth'),
-    DB = require('./constants');
+    DB = require('./constants'),
+    UserBusiness = require('../business/UserBusiness'),
+    _ = require('underscore');
 
 module.exports = function(passport) {
 
@@ -15,23 +16,36 @@ module.exports = function(passport) {
     });
 
     passport.use('local', new LocalStrategy((username, password, done) => {
-        Model.USERS.getUserByCredentials(username, password)
-        .spread((result, metadata) => {
-            if (result.length === 1) {
+        UserBusiness.getUserByCredentials(username, password)
+            .then((user) => {
+                if (!user) {
+                    return done(null, false, { message: 'Incorrect username or password' });
+                }
+
                 global.User = {
-                    id: result[0][`${DB.columns.BLOG.USERS.USER_ID}`],
-                    name: result[0][`${DB.columns.BLOG.USERS.NAME}`],
-                    password: result[0][`${DB.columns.BLOG.USERS.PASSWORD}`]
+                    id: user.UserID,
+                    name: user.Name,
+                    password: user.Password
                 };
+
                 return done(null, {
-                    userId: result[0][`${DB.columns.BLOG.USERS.USER_ID}`],
-                    username: result[0][`${DB.columns.BLOG.USERS.NAME}`]
+                    userId: user.UserID,
+                    username: user.Name
                 });
-            } else {
-                return done(null, false);
-            }
-        });
+
+            }).catch((err) => {
+                return done(err);
+            });
     }));
+
+    passport.authenticationMiddleware = (paths) => {        
+        return function(req, res, next) {
+            if (req.isAuthenticated() || _.contains(paths, req.path)) {                
+                return next();
+            }
+            res.redirect('/');
+        }
+    };
 
     passport.use(new FacebookStrategy({
         clientID: configAuth.facebookAuth.clientID,
@@ -39,15 +53,15 @@ module.exports = function(passport) {
         callbackURL: configAuth.facebookAuth.callbackURL
     }, (token, refreshToken, profile, done) => {
         process.nextTick(() => {
-            Model.USERS.getUserByFacebookId(profile.id).spread((result, metadata) => {
+            UsersBusiness.getUserByFacebookId(profile.id).spread((result, metadata) => {
                 if (result.length === 1) {
                     return done(null, {
                         userId: result[0].userId,
                         username: result[0].username
                     });
                 } else {
-                    Model.USERS.addNewFacebookUser(profile.id);
-                    return done(null, {facebookId: profile.id});
+                    UsersBusiness.addNewFacebookUser(profile.id);
+                    return done(null, { facebookId: profile.id });
                 }
             })
         });
